@@ -39,8 +39,25 @@ app.get('/', routes.index);
 app.get('/map', map.show);
 app.get('/users', user.list);
 
+
+app.get('/callback', function(request, response){
+  if(request.param("hub.challenge") != null){
+    response.send(request.param("hub.challenge"));
+  } else {
+    console.log("ERROR on suscription request: %s", util.inspect(request));
+  }
+});
+
 app.get('/auth', function(req, resp) {
   	console.log("\n== Calling /auth ==");
+  	
+  	if (req.param("hub.challenge") != null)	 {
+  		resp.send(req.param("hub.challenge"));
+  	} else {
+  		console.log("ERROR did not find hub.challenge in request: %s", util.inspect(request));
+  	}
+
+
   	/*resp.post(
      	'https://api.instagram.com/v1/subscriptions/',
      	{
@@ -63,10 +80,10 @@ app.get('/auth', function(req, resp) {
      		response.send(params['hub.challenge'] || 'No hub.challenge present');
      	}
     );*/
-  	Instagram.subscriptions.handshake(req, resp, function(data) {
+  	/*Instagram.subscriptions.handshake(req, resp, function(data) {
   		console.log("handshake() log");
   		console.log(data);
-  	});
+  	});*/
 
 });
 
