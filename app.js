@@ -39,19 +39,13 @@ app.get('/', routes.index);
 app.get('/map', map.show);
 app.get('/users', user.list);
 
-
-app.get('/callback', function(request, response){
-  if(request.param("hub.challenge") != null){
-    response.send(request.param("hub.challenge"));
-  } else {
-    console.log("ERROR on suscription request: %s", util.inspect(request));
-  }
-});
-
 app.get('/auth', function(req, resp) {
   	console.log("\n== Calling /auth ==");
   	
   	if (req.param("hub.challenge") != null)	 {
+  		console.log("hub.challenge not null");
+  		console.log("req.param['hub.challenge']: " + req.param("hub.challenge"));
+  		console.log("resp: " + resp);
   		resp.send(req.param("hub.challenge"));
   	} else {
   		console.log("ERROR did not find hub.challenge in request: %s", util.inspect(request));
