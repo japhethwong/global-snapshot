@@ -1,5 +1,5 @@
 {
-  "name": "application-name",
+  "name": "Photo Bomb",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -9,6 +9,7 @@
     "express": "3.3.4",
     "jade": "*",
     "stylus": "*",
-    "nodemon": "*"
+    "nodemon": "*",
+    "googlemaps": "*"
   }
 }
