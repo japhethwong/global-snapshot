@@ -10,6 +10,8 @@
     "jade": "*",
     "stylus": "*",
     "nodemon": "*",
-    "googlemaps": "*"
+    "googlemaps": "*",
+    "request": "*",
+    "url": "*"
   }
 }
