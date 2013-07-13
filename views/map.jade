@@ -92,13 +92,14 @@ block content
     window.onload = loadScript;
   script.
     var tweet = function(url) {
-      var contain = document.createElement('div');
-      contain.style.background = 'white';
+      //var contain = document.createElement('div');
+      //contain.style.background = 'white';
       var pic = document.createElement('img');
       pic.src = url;
-      contain.appendChild(pic);
+      //contain.appendChild(pic);
       var feed = document.getElementById('feed');
-      feed.insertBefore(contain, feed.firstChild);
+      //feed.insertBefore(contain, feed.firstChild);
+      feed.insertBefore(pic, feed.firstChild);
       if (feed.childNodes.length > 10) {
         feed.removeChild(feed.lastChild);
       }
