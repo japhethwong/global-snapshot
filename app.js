@@ -12,6 +12,7 @@ var express = require('express')
   , request = require('request')
   , url = require('url')
   , helpers = require('./helpers')
+  , crypto = require('crypto')
   , Instagram = require('instagram-node-lib');
 
 var $ = require('jquery').create();
@@ -53,84 +54,15 @@ app.get('/hello', routes.index);
 app.get('/', map.show);
 app.get('/users', user.list);
 
-/*app.get('/auth', function(req, resp) {
-  console.log("\n== Calling /auth ==");
-
-  if (req.param("hub.challenge") != null)	 {
-    console.log("hub.challenge not null");
-    console.log("req.param['hub.challenge']: " + req.param("hub.challenge"));
-    console.log("resp.url: " + resp.url);
-    resp.send(req.param("hub.challenge"));
-  } else {
-    console.log("ERROR did not find hub.challenge in request: %s", util.inspect(request));
-  }
-*/
-
-  /*resp.post(
-    'https://api.instagram.com/v1/subscriptions/',
-    {
-      form: {
-        'client_id': '9727dbbcbcdc47f6b70964201ec51b72',
-        'client_secret': 'd3b5d25125624e0eb17af3f90bd40940',
-        'object': 'user',
-        'aspect': 'media',
-        'verify_token': 'myVerifyToken',
-        'callback_url': 'http://photobomb.herokuapp.com/map',
-      }
-    }, function (req, resp) {
-      console.log("req:\n" + req);
-      console.log("\nresp: \n" + resp);
-      console.log("\nresp.url: " + resp.url);
-
-      var params = url.parse(resp.url, true).pathname;
-      console.log("params: " + params);
-      console.log('hub.mode: ' + params['hub.mode']);
-      response.send(params['hub.challenge'] || 'No hub.challenge present');
-    }
-    );*/
-    /*Instagram.subscriptions.handshake(req, resp, function(data) {
-      console.log("handshake() log");
-      console.log(data);
-    });*/
-
-//});
-
-
-
-app.get('/auth', function(req, resp){
-  console.log("\n== Calling /auth ==");
-  Instagram.media.subscribe({ lat: 48.858844300000001, lng: 2.2943506, radius: 1000 }, function(req, resp) {
+app.get('/subscribe', function(req, resp){
+  console.log("\n== Calling /subscribe ==");
+  Instagram.media.subscribe({ lat: 48.858844300000001, lng: 2.2943506, radius: 1000 }/*, function(req, resp) {
     var params = url.parse(req.url, true).query;
     console.log("req.url: " + req.url);
     console.log("hub.challenge: " + params['hub.challenge']);
     console.log("resp.url: " + resp.url);
     resp.send(params['hub.challenge'] || 'No hub.challenge present');  
-  });
-
-
-  /*request.post(
-    'https://api.instagram.com/v1/subscriptions/',
-    {
-      form: {
-        'client_id': '9727dbbcbcdc47f6b70964201ec51b72',
-        'client_secret': 'd3b5d25125624e0eb17af3f90bd40940',
-        'object': 'user',
-        'aspect': 'media',
-        'verify_token': 'myVerifyToken',
-        'callback_url': 'http://photobomb.herokuapp.com/map',
-      }
-    }, function (req, resp) {
-      console.log("req:\n" + req);
-      console.log("\nresp: \n" + resp);
-      console.log("\nresp.url: " + resp.url);
-
-      var params = url.parse(resp.url, true).pathname;
-      console.log("params: " + params);
-      console.log('hub.mode: ' + params['hub.mode']);
-      response.send(params['hub.challenge'] || 'No hub.challenge present');
-    }
-    );*/
-
+  }*/);
 });
 
 
@@ -173,6 +105,12 @@ function callFlickr(socket) {
       items = o.items;
       for (var item in items) {
         item = items[item];
+        username = item.author.split('(')[1].split(')')[0];
+        
+        console.log("\n\n>>>");
+        console.log(item);
+        console.log(username);
+
         link = item.link;
         id = link.split('/').slice(-2)[0];
         url = item.media.m;
@@ -184,7 +122,8 @@ function callFlickr(socket) {
         socket.emit('flickr', {
           id: id,
           url: url,
-          link: link
+          link: link,
+          username: username
         });
         set[id] = id;
       }
@@ -203,6 +142,25 @@ io.sockets.on('connection', function (socket) {
 
 
 var settings = require('./settings');
+
+app.get('/auth', function(request, response) {
+  var params = url.parse(request.url, true).query;
+  response.send(params['hub.challenge'] || 'No hub.challenge present');
+});
+
+app.post('/auth', function(request, response) {
+  var hmac = crypto.createHmac('sha1', settings.CLIENT_SECRET);
+  hmac.update(request.rawBody);
+  var providedSignature = request.headers['x-hub-signature'];
+  var calculatedSignature = hmac.digest(encoding='hex');
+
+  if ((providedSignature != calculatedSignature) || !request.body)
+    response.send('FAIL');
+
+  var updates = request.body;
+  response.send('OK');
+});
+
 
 app.get('/callbacks/geo/:geoName', function(request, response){
     // The GET callback for each subscription verification.
