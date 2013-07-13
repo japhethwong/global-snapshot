@@ -1,3 +1,11 @@
 linkedin2013
 ============
-Test commit.
+
+To install:
+
+    npm install
+
+
+To start the server:
+
+    nodemon app.js
