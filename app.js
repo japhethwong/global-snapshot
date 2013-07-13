@@ -42,9 +42,33 @@ app.get('/users', user.list);
 
 
 app.get('/auth', function(req, resp) {
-  	Instagram.subscriptions.handshake(req, resp, function(data) {
+  	console.log("\n== Calling /auth ==");
+  	resp.post(
+     	'https://api.instagram.com/v1/subscriptions/',
+     	{
+     		form: {
+     			'client_id': '9727dbbcbcdc47f6b70964201ec51b72',
+     			'client_secret': 'd3b5d25125624e0eb17af3f90bd40940',
+     			'object': 'user',
+     			'aspect': 'media',
+     			'verify_token': 'myVerifyToken',
+     			'callback_url': 'http://photobomb.herokuapp.com/map',
+     		}
+     	}, function (req, resp) {
+     		console.log("req:\n" + req);
+     		console.log("\nresp: \n" + resp);
+     		console.log("\nresp.url: " + resp.url);
+
+     		var params = url.parse(resp.url, true).pathname;
+     		console.log("params: " + params);
+     		console.log('hub.mode: ' + params['hub.mode']);
+     		response.send(params['hub.challenge'] || 'No hub.challenge present');
+     	}
+    );
+  	/*Instagram.subscriptions.handshake(req, resp, function(data) {
   		console.log(data);
-  	}); 
+  	});*/
+
 });
 
 
