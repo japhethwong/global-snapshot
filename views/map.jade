@@ -2,83 +2,6 @@ extends layout
 
 block content
   script.
-    function incrementTweetCounter() {
-      ++$("#tweet_counter")[0].innerHTML;
-    }
-
-    function incrementPhotosCounter() {
-      ++$("#photo_counter")[0].innerHTML;
-    }
-
-    var socket = io.connect();
-    socket.emit('get_tweets', {});
-    socket.emit('get_flickr', {});
-
-    socket.on('tweet', function (data) {
-      // console.log(data);
-      coords = data.coordinates.coordinates;
-      latLng = new google.maps.LatLng(coords[1], coords[0]);
-
-      var circle = {
-        path: google.maps.SymbolPath.CIRCLE,
-        fillColor: "red",
-        fillOpacity: 1,
-        scale: 1,
-        strokeColor: "red",
-        strokeWeight: 8
-      };
-
-      marker = new google.maps.Marker({
-        position: latLng,
-        icon: circle,
-        title: data.username,
-        animation: google.maps.Animation.DROP
-      });
-      marker.setMap(map);
-      incrementTweetCounter();
-    });
-
-    socket.on('flickr', function(data) { 
-      $.getJSON('http://anyorigin.com/get?url=http%3A//api.flickr.com/services/rest/%3Fmethod%3Dflickr.photos.geo.getLocation%26api_key%3D63966a7906fb93c2d1a674cb3e99d451%26format%3Djson%26photo_id%3D' + data.id.toString() + '&callback=?', function(photoData) {
-        var coords;
-
-        function jsonFlickrApi(data) {
-          if (data.stat == "fail") {
-            return;
-          }
-
-          latitude = data.photo.location.latitude;
-          longitude = data.photo.location.longitude;  
-
-          coords = new google.maps.LatLng(latitude, longitude);
-        }
-        eval(photoData.contents);
-
-        if (!coords) {
-          return;
-        }
-
-        var circle = {
-          path: google.maps.SymbolPath.CIRCLE,
-          fillColor: "blue",
-          fillOpacity: 1,
-          scale: 1,
-          strokeColor: "blue",
-          strokeWeight: 8
-        };
-
-        marker = new google.maps.Marker({
-          position: coords,
-          icon: circle,
-          title: "Photo from: " + coords,
-          animation: google.maps.Animation.DROP, 
-        });
-        marker.setMap(map);
-        incrementPhotosCounter();
-      tweet(data.url);
-      });
-    });
-  script.
     var map;
     function initialize() {
       var mapOptions = {
@@ -100,6 +23,121 @@ block content
       document.body.appendChild(script);
     }
     window.onload = loadScript;
+
+    function incrementTweetCounter() {
+      ++$("#tweet_counter")[0].innerHTML;
+    }
+
+    function incrementPhotosCounter() {
+      ++$("#photo_counter")[0].innerHTML;
+    }
+
+    function createMarker(marker) {
+      var infowindow = new google.maps.InfoWindow({
+        content: '"' + marker.data_text + '"' + '<br>    --' + marker.data_title
+      });
+
+      google.maps.event.addListener(marker, 'mouseover', function() {
+        infowindow.open(marker.get('map'), marker);
+      });
+      google.maps.event.addListener(marker, 'mouseout', function() {
+      //infowindow.close(marker.get('map'), marker);
+      });
+      google.maps.event.addListener(marker, 'click', function() {
+        infowindow.open(marker.get('map'), marker);
+      });
+    }
+
+    var socket = io.connect();
+    socket.emit('get_tweets', {});
+    socket.emit('get_flickr', {});
+
+    socket.on('tweet', function (data) {
+      // console.log(data);
+      coords = data.coordinates.coordinates;
+      latLng = new google.maps.LatLng(coords[1], coords[0]);
+
+      var circle = {
+        path: google.maps.SymbolPath.CIRCLE,
+        fillColor: "blue",
+        fillOpacity: 1,
+        scale: 1,
+        strokeColor: "blue",
+        strokeWeight: 8
+      };
+
+      marker = new google.maps.Marker({
+        position: latLng,
+        icon: circle,
+        data_title: data.username,
+        data_text: data.text,
+        animation: google.maps.Animation.DROP
+      });
+      marker.setMap(map);
+      incrementTweetCounter();
+
+      createMarker(marker);
+    });
+
+    function createPhotoMarker(marker) {
+      var infowindow = new google.maps.InfoWindow({
+        content: '<img src="' + marker.img + '"</img>'
+      });
+
+      google.maps.event.addListener(marker, 'mouseover', function() {
+        infowindow.open(marker.get('map'), marker);
+      });
+      google.maps.event.addListener(marker, 'mouseout', function() {
+      //infowindow.close(marker.get('map'), marker);
+      });
+      google.maps.event.addListener(marker, 'click', function() {
+        infowindow.open(marker.get('map'), marker);
+      });
+
+    }
+
+    socket.on('flickr', function(data) {
+      $.getJSON('http://anyorigin.com/get?url=http%3A//api.flickr.com/services/rest/%3Fmethod%3Dflickr.photos.geo.getLocation%26api_key%3D63966a7906fb93c2d1a674cb3e99d451%26format%3Djson%26photo_id%3D' + data.id.toString() + '&callback=?', function(photoData) {
+        var coords;
+
+        function jsonFlickrApi(data) {
+          if (data.stat == "fail") {
+            return;
+          }
+
+          latitude = data.photo.location.latitude;
+          longitude = data.photo.location.longitude;
+
+          coords = new google.maps.LatLng(latitude, longitude);
+        }
+        eval(photoData.contents);
+
+        if (!coords) {
+          return;
+        }
+
+        var circle = {
+          path: google.maps.SymbolPath.CIRCLE,
+          fillColor: "red",
+          fillOpacity: 1,
+          scale: 1,
+          strokeColor: "red",
+          strokeWeight: 8
+        };
+
+        marker = new google.maps.Marker({
+          position: coords,
+          icon: circle,
+          title: "Photo from: " + coords,
+          img: data.url,
+          animation: google.maps.Animation.DROP, 
+        });
+        marker.setMap(map);
+        createPhotoMarker(marker);
+        incrementPhotosCounter();
+      tweet(data.url);
+      });
+    });
   script.
     var tweet = function(url) {
       //var contain = document.createElement('div');
