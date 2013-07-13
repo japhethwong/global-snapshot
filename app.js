@@ -157,9 +157,11 @@ io.sockets.on('connection', function (socket) {
 io.sockets.on('connection', function (socket) {
   socket.on('get_flickr', function(data) {
     console.log('get_flickr');
+
     $.getJSON('http://anyorigin.com/get?url=http%3A//api.flickr.com/services/feeds/photos_public.gne%3Fformat%3Djson&callback=?', function(data){
       function jsonFlickrFeed(o) {
         items = o.items;
+        console.log(items);
         for (var item in items) {
           item = items[item];
           link = item.link;
@@ -168,11 +170,31 @@ io.sockets.on('connection', function (socket) {
 
           socket.emit('flickr', {
             id: id,
-            url: url
+            url: url,
+            link: link
           });
         }
       }
       eval(data.contents);
+/**
+    console.log($.getJSON);
+    $.getJSON('http://api.flickr.com/services/feeds/photos_public.gne?format=json', function(data) {
+      console.log(data);
+      photosList = $.parseJSON(data);
+
+      $.each(photosList, function(index, photo) {
+          photoId = photo.url;  // TODO Grab ID of Photo.
+          $.getJSON('http://api.flickr.com/services/rest/?method=flickr.photos.geo.getLocation&api_key=63966a7906fb93c2d1a674cb3e99d451&photo_id=' + 
+              photoId + '&format=json', function(photoData) {
+                socket.emit('flickr', {
+                  'url': data.url,
+                  'longitude': photoData.location.longitude,
+                  'latitude': photoData.location.latitude,
+                });
+              });
+
+      });
+>>>>>>> Stashed changes*/
     });
   });
 });
