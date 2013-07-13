@@ -13,6 +13,8 @@ var express = require('express')
   , url = require('url')
   , Instagram = require('instagram-node-lib');
 
+var $ = require('jquery').create();
+
 var app = express();
 var server = app.listen(process.env.PORT || 3000);
 var io = require('socket.io').listen(server);
@@ -150,3 +152,67 @@ io.sockets.on('connection', function (socket) {
 
   });
 });
+
+io.sockets.on('connection', function (socket) {
+  socket.on('get_flickr', function(data) {
+    console.log('get_flickr');
+    $.getJSON('http://anyorigin.com/get?url=http%3A//api.flickr.com/services/feeds/photos_public.gne%3Fformat%3Djson&callback=?', function(data){
+      function jsonFlickrFeed(o) {
+        items = o.items;
+        for (var item in items) {
+          item = items[item];
+          link = item.link;
+          id = link.split('/').slice(-2)[0];
+          url = item.media.m;
+
+          socket.emit('flickr', {
+            id: id,
+            url: url
+          });
+        }
+      }
+      eval(data.contents);
+    });
+  });
+});
+
+
+var settings = require('./settings');
+
+app.get('/callbacks/geo/:geoName', function(request, response){
+    // The GET callback for each subscription verification.
+  var params = url.parse(request.url, true).query;
+  response.send(params['hub.challenge'] || 'No hub.challenge present');
+});
+
+
+app.post('/callbacks/geo/:geoName', function(request, response){
+    // The POST callback for Instagram to call every time there's an update
+    // to one of our subscriptions.
+    
+    // First, let's verify the payload's integrity by making sure it's
+    // coming from a trusted source. We use the client secret as the key
+    // to the HMAC.
+    var hmac = crypto.createHmac('sha1', settings.CLIENT_SECRET);
+    hmac.update(request.rawBody);
+    var providedSignature = request.headers['x-hub-signature'];
+    var calculatedSignature = hmac.digest(encoding='hex');
+    
+    // If they don't match up or we don't have any data coming over the
+    // wire, then bail out early.
+    if((providedSignature != calculatedSignature) || !request.body)
+        response.send('FAIL');
+    
+    // Go through and process each update. Note that every update doesn't
+    // include the updated data - we use the data in the update to query
+    // the Instagram API to get the data we want.
+  var updates = request.body;
+  var geoName = request.params.geoName;
+  for(index in updates){
+    var update = updates[index];
+    if(update['object'] == "geography")
+      helpers.processGeography(geoName, update);
+  }
+  response.send('OK');
+});
+

@@ -15,6 +15,7 @@
     "socket.io": "*",
     "request": "*",
     "url": "*",
-    "instagram-node-lib": "*"
+    "instagram-node-lib": "*",
+    "jquery": "*"
   }
 }
