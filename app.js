@@ -14,7 +14,7 @@ var express = require('express')
   , Instagram = require('instagram-node-lib');
 
 var app = express();
-var server = app.listen(3000);
+var server = app.listen(process.env.PORT || 3000);
 var io = require('socket.io').listen(server);
 
 var twitter = require('ntwitter');

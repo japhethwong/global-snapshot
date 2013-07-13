@@ -2,7 +2,7 @@ extends layout
 
 block content
   script.
-    var socket = io.connect('http://localhost');
+    var socket = io.connect();
     socket.emit('get_tweets', {});
 
     socket.on('tweet', function (data) {
