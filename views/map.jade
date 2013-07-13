@@ -76,8 +76,8 @@ block content
     var map;
     function initialize() {
       var mapOptions = {
-        zoom: 5,
-        center: new google.maps.LatLng(38.640143, -97.28685),
+        zoom: 3,
+        center: new google.maps.LatLng(30.640143, 42.28685),
         mapTypeId: google.maps.MapTypeId.ROADMAP
       }
       map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
@@ -94,5 +94,29 @@ block content
       document.body.appendChild(script);
     }
     window.onload = loadScript;
-  #map-canvas(style='width: 100%; height: 100%')
+  script.
+    var tweet = function(url) {
+      var contain = document.createElement('div');
+      contain.style.background = 'white';
+      var pic = document.createElement('img');
+      pic.src = url;
+      pic.height = 100;
+      contain.appendChild(pic);
+      var feed = document.getElementById('feed');
+      feed.insertBefore(contain, feed.firstChild);
+      if (feed.childNodes.length > 10) {
+        feed.removeChild(feed.lastChild);
+      }
+    }  
+    
+  #header
+    h1 Photo Bomb
+  #map
+    #map-canvas(style='width: 100%; height: 100%')
+  #feed
+    // Anything here?
+    script tweet('http://upload.wikimedia.org/wikipedia/commons/8/85/Smiley.svg');
+    script tweet('http://www.wpclipart.com/smiley/orange_smiley/orange_smiley_with_shades.png');
+    
+  
 
