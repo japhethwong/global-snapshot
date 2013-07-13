@@ -11,6 +11,9 @@ body {
 a {
   color: #00b7ff;
 }
+#name {
+  font-style: italic;
+}
 #header {
   height: 50px;
   width: 100%;
@@ -21,13 +24,16 @@ a {
   height: 100%;
   position: absolute;
   float: left;
-  background-color: #ffa500;
 }
 #feed {
-  width: 20%;
+  width: 200px;
   height: 100%;
   float: right;
   opacity: 0.8;
   background-color: #fff;
   z-index: 1;
+  overflow-y: hidden;
+}
+#feed img {
+  width: 100%;
 }
