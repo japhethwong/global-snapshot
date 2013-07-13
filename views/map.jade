@@ -174,7 +174,8 @@ block content
       span &nbsp;Flickr Photos:
       span#photo_counter 0
   #feed
-    button.clientsOpen hello
+    #button_bottom
+      button.clientsOpen Toggle
   #map
     #map-canvas(style='width: 100%; height: 100%')
   script.
@@ -186,7 +187,7 @@ block content
       console.log('align');
       var feed = $("#feed");
       feed.children('img').each(function() {
-        this.height = 200;
+        $(this).css('height', 200);
         $(this).css('width', 'auto');
       });
     }
@@ -195,7 +196,7 @@ block content
       console.log('realign');
       var feed = $("#feed");
       feed.children('img').each(function() {
-        this.width = 200;
+        $(this).css('width', 200);
         $(this).css('height', 'auto');
       });
     }
@@ -204,7 +205,7 @@ block content
       console.log('clicked');
 
       if (small) {
-        $("#feed").animate({width: "100%"}, 1000, function() {
+        $("#feed").animate({width: "70%"}, 1000, function() {
           small = false;
           alignImages();
         });

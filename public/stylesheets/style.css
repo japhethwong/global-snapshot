@@ -69,3 +69,14 @@ a {
 #photo_counter {
   margin-left: 5px;
 }
+
+#button_bottom {
+  position: absolute;
+  z-index: 999;
+  bottom: 70px;
+  right: 50px;
+}
+
+button {
+  width: 100px;
+}
