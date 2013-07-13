@@ -154,9 +154,14 @@ io.sockets.on('connection', function (socket) {
   });
 });
 
+var set = {};
+
 function callFlickr(socket) {
   console.log('call flickr');
   $.getJSON('http://anyorigin.com/get?url=http%3A//api.flickr.com/services/feeds/photos_public.gne%3Fformat%3Djson&callback=?', function(data){
+    if (set.length > 0) {
+      set = {};
+    }
     function jsonFlickrFeed(o) {
       items = o.items;
       for (var item in items) {
@@ -165,11 +170,16 @@ function callFlickr(socket) {
         id = link.split('/').slice(-2)[0];
         url = item.media.m;
 
+        if (id in set) {
+          return true;
+        }
+
         socket.emit('flickr', {
           id: id,
           url: url,
           link: link
         });
+        set[id] = id;
       }
     }
     eval(data.contents);
