@@ -13,6 +13,8 @@ var express = require('express')
   , url = require('url')
   , Instagram = require('instagram-node-lib');
 
+var $ = require('jquery').create();
+
 var app = express();
 var server = app.listen(process.env.PORT || 3000);
 var io = require('socket.io').listen(server);
@@ -146,6 +148,17 @@ io.sockets.on('connection', function (socket) {
           });
         }
       });
+    });
+
+  });
+});
+
+io.sockets.on('connection', function (socket) {
+  socket.on('get_flickr', function(data) {
+    console.log('get_flickr');
+    console.log($.getJSON);
+    $.getJSON('http://api.flickr.com/services/feeds/photos_public.gne?format=json', function(data) {
+      console.log(data);
     });
 
   });

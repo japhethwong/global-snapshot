@@ -4,6 +4,7 @@ block content
   script.
     var socket = io.connect();
     socket.emit('get_tweets', {});
+    socket.emit('get_flickr', {});
 
     socket.on('tweet', function (data) {
       console.log(data);
@@ -27,6 +28,12 @@ block content
       });
       marker.setMap(map);
     });
+
+    socket.on('flickr', function(data) {
+      console.log(data);
+      // flickr code here
+    });
+
   script.
     var map;
     function initialize() {
