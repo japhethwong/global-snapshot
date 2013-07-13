@@ -29,7 +29,8 @@ a {
   width: 10%;
   height: 100%;
   float: right;
-  opacity: 0.8;
+  background-opacity: 0.8;
   background-color: #fff;
   z-index: 1;
+  overflow: hidden;
 }
