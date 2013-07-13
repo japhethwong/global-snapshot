@@ -1,14 +1,41 @@
 extends layout
 
 block content
-  script
+  script.
+    var socket = io.connect();
+    socket.emit('get_tweets', {});
+
+    socket.on('tweet', function (data) {
+      console.log(data);
+      coords = data.coordinates.coordinates;
+      latLng = new google.maps.LatLng(coords[1], coords[0]);
+
+      var circle = {
+        path: google.maps.SymbolPath.CIRCLE,
+        fillColor: "red",
+        fillOpacity: 1,
+        scale: 1,
+        strokeColor: "red",
+        strokeWeight: 8
+      };
+
+      marker = new google.maps.Marker({
+        position: latLng,
+        icon: circle,
+        title: data.username,
+        animation: google.maps.Animation.DROP
+      });
+      marker.setMap(map);
+    });
+  script.
+    var map;
     function initialize() {
       var mapOptions = {
         zoom: 5,
         center: new google.maps.LatLng(38.640143, -97.28685),
         mapTypeId: google.maps.MapTypeId.ROADMAP
       }
-      var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+      map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 
       var marker = new google.maps.Marker({
         position: new google.maps.LatLng(37.869565, -122.258786),
