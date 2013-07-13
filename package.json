@@ -12,6 +12,7 @@
     "nodemon": "*",
     "googlemaps": "*",
     "request": "*",
-    "url": "*"
+    "url": "*",
+    "instagram-node-lib": "*"
   }
 }
