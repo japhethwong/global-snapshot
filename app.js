@@ -53,7 +53,7 @@ app.get('/hello', routes.index);
 app.get('/', map.show);
 app.get('/users', user.list);
 
-app.get('/auth', function(req, resp) {
+/*app.get('/auth', function(req, resp) {
   console.log("\n== Calling /auth ==");
 
   if (req.param("hub.challenge") != null)	 {
@@ -64,7 +64,7 @@ app.get('/auth', function(req, resp) {
   } else {
     console.log("ERROR did not find hub.challenge in request: %s", util.inspect(request));
   }
-
+*/
 
   /*resp.post(
     'https://api.instagram.com/v1/subscriptions/',
