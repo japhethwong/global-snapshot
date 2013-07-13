@@ -17,6 +17,9 @@ a {
 #name {
   font-style: italic;
   padding-left: 20px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  margin: 0;
 }
 
 #header {
@@ -47,11 +50,12 @@ a {
 #feed img {
   width: 100%;
   margin: 0px;
+  display: block;
 }
 
 #counter {
   position: absolute;
-  top: 10px;
+  top: 14px;
   left: 45%;
 }
 
