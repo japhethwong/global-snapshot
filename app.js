@@ -49,8 +49,8 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
-app.get('/map', map.show);
+app.get('/hello', routes.index);
+app.get('/', map.show);
 app.get('/users', user.list);
 
 app.get('/auth', function(req, resp) {
