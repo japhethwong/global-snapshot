@@ -49,8 +49,8 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
-app.get('/map', map.show);
+app.get('/hello', routes.index);
+app.get('/', map.show);
 app.get('/users', user.list);
 
 app.get('/auth', function(req, resp) {
@@ -194,7 +194,7 @@ function callFlickr(socket) {
 io.sockets.on('connection', function (socket) {
   socket.on('get_flickr', function(data) {
     console.log('get_flickr');
-    setInterval(function() { callFlickr(socket); }, 2000);
+    setInterval(function() { callFlickr(socket); }, 3000);
   });
 });
 

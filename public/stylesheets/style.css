@@ -1,6 +1,7 @@
 html {
   height: 100%;
 }
+
 body {
   height: 100%;
   width: 100%;
@@ -8,28 +9,36 @@ body {
   font: 14px "century gothic", tahoma, "Lucida Grande", Helvetica, Arial, sans-serif;
   margin: 0;
 }
+
 a {
   color: #00b7ff;
 }
+
 #name {
   font-style: italic;
+  padding-left: 20px;
 }
+
 #header {
   height: 50px;
   width: 100%;
   background-color: #fff;
 }
+
 #map {
   width: 100%;
   height: 100%;
   position: absolute;
   float: left;
+  z-index: 0;
 }
+
 #feed {
+  position: absolute;
   width: 200px;
   height: 100%;
-  float: right;
-  opacity: 0.8;
+  right: 0;
+  background-opacity: 0.8;
   background-color: #fff;
   z-index: 1;
   overflow-y: hidden;
@@ -38,4 +47,19 @@ a {
 #feed img {
   width: 100%;
   margin: 0px;
+}
+
+#counter {
+  position: absolute;
+  top: 10px;
+  left: 45%;
+}
+
+#tweet_counter {
+  margin-right: 20px;
+  margin-left: 5px;
+}
+
+#photo_counter {
+  margin-left: 5px;
 }

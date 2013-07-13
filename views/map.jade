@@ -2,6 +2,14 @@ extends layout
 
 block content
   script.
+    function incrementTweetCounter() {
+      ++$("#tweet_counter")[0].innerHTML;
+    }
+
+    function incrementPhotosCounter() {
+      ++$("#photo_counter")[0].innerHTML;
+    }
+
     var socket = io.connect();
     socket.emit('get_tweets', {});
     socket.emit('get_flickr', {});
@@ -27,6 +35,7 @@ block content
         animation: google.maps.Animation.DROP
       });
       marker.setMap(map);
+      incrementTweetCounter();
     });
 
     socket.on('flickr', function(data) { 
@@ -65,6 +74,7 @@ block content
           animation: google.maps.Animation.DROP, 
         });
         marker.setMap(map);
+        incrementPhotosCounter();
       tweet(data.url);
       });
     });
@@ -103,16 +113,15 @@ block content
       if (feed.childNodes.length > 10) {
         feed.removeChild(feed.lastChild);
       }
-    }  
-    
+    }
+
   #header
     h1#name Photo Bomb
+    #counter
+      span Tweets:
+      span#tweet_counter 0
+      span Photos:
+      span#photo_counter 0
+  #feed
   #map
     #map-canvas(style='width: 100%; height: 100%')
-  #feed
-    // Anything here?
-    //script tweet('http://upload.wikimedia.org/wikipedia/commons/8/85/Smiley.svg');
-    //script tweet('http://www.wpclipart.com/smiley/orange_smiley/orange_smiley_with_shades.png');
-    
-  
-
