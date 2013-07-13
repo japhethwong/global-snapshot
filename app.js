@@ -43,7 +43,7 @@ app.get('/users', user.list);
 
 app.get('/auth', function(req, resp) {
   	console.log("\n== Calling /auth ==");
-  	resp.post(
+  	/*resp.post(
      	'https://api.instagram.com/v1/subscriptions/',
      	{
      		form: {
@@ -64,16 +64,17 @@ app.get('/auth', function(req, resp) {
      		console.log('hub.mode: ' + params['hub.mode']);
      		response.send(params['hub.challenge'] || 'No hub.challenge present');
      	}
-    );
-  	/*Instagram.subscriptions.handshake(req, resp, function(data) {
+    );*/
+  	Instagram.subscriptions.handshake(req, resp, function(data) {
   		console.log(data);
-  	});*/
+  	});
 
 });
 
 
 
 app.get('/subscribe', function(req, resp){
+  	console.log("\n== Calling /subscribe ==");
   	Instagram.media.subscribe({ lat: 48.858844300000001, lng: 2.2943506, radius: 1000 });
 
     /*request.post(
