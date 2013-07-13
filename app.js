@@ -101,6 +101,9 @@ app.get('/auth', function(req, resp){
   console.log("\n== Calling /auth ==");
   Instagram.media.subscribe({ lat: 48.858844300000001, lng: 2.2943506, radius: 1000 }, function(req, resp) {
     var params = url.parse(req.url, true).query;
+    console.log("req.url: " + req.url);
+    console.log("hub.challenge: " + params['hub.challenge']);
+    console.log("resp.url: " + resp.url);
     resp.send(params['hub.challenge'] || 'No hub.challenge present');  
   });
 
