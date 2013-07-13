@@ -41,9 +41,11 @@ block content
         infowindow.open(marker.get('map'), marker);
       });
       google.maps.event.addListener(marker, 'mouseout', function() {
-        infowindow.close(marker.get('map'), marker);
+      //infowindow.close(marker.get('map'), marker);
       });
-
+      google.maps.event.addListener(marker, 'click', function() {
+        infowindow.open(marker.get('map'), marker);
+      });
     }
 
     var socket = io.connect();
@@ -86,7 +88,10 @@ block content
         infowindow.open(marker.get('map'), marker);
       });
       google.maps.event.addListener(marker, 'mouseout', function() {
-        infowindow.close(marker.get('map'), marker);
+      //infowindow.close(marker.get('map'), marker);
+      });
+      google.maps.event.addListener(marker, 'click', function() {
+        infowindow.open(marker.get('map'), marker);
       });
 
     }
