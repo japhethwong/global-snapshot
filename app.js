@@ -11,6 +11,7 @@ var express = require('express')
   , path = require('path')
   , request = require('request')
   , url = require('url')
+  , helpers = require('./helpers')
   , Instagram = require('instagram-node-lib');
 
 var $ = require('jquery').create();
@@ -53,74 +54,74 @@ app.get('/map', map.show);
 app.get('/users', user.list);
 
 app.get('/auth', function(req, resp) {
-  	console.log("\n== Calling /auth ==");
-  	
-  	if (req.param("hub.challenge") != null)	 {
-  		console.log("hub.challenge not null");
-  		console.log("req.param['hub.challenge']: " + req.param("hub.challenge"));
-  		console.log("resp.url: " + resp.url);
-  		resp.send(req.param("hub.challenge"));
-  	} else {
-  		console.log("ERROR did not find hub.challenge in request: %s", util.inspect(request));
-  	}
+  console.log("\n== Calling /auth ==");
+
+  if (req.param("hub.challenge") != null)	 {
+    console.log("hub.challenge not null");
+    console.log("req.param['hub.challenge']: " + req.param("hub.challenge"));
+    console.log("resp.url: " + resp.url);
+    resp.send(req.param("hub.challenge"));
+  } else {
+    console.log("ERROR did not find hub.challenge in request: %s", util.inspect(request));
+  }
 
 
-  	/*resp.post(
-     	'https://api.instagram.com/v1/subscriptions/',
-     	{
-     		form: {
-     			'client_id': '9727dbbcbcdc47f6b70964201ec51b72',
-     			'client_secret': 'd3b5d25125624e0eb17af3f90bd40940',
-     			'object': 'user',
-     			'aspect': 'media',
-     			'verify_token': 'myVerifyToken',
-     			'callback_url': 'http://photobomb.herokuapp.com/map',
-     		}
-     	}, function (req, resp) {
-     		console.log("req:\n" + req);
-     		console.log("\nresp: \n" + resp);
-     		console.log("\nresp.url: " + resp.url);
+  /*resp.post(
+    'https://api.instagram.com/v1/subscriptions/',
+    {
+      form: {
+        'client_id': '9727dbbcbcdc47f6b70964201ec51b72',
+        'client_secret': 'd3b5d25125624e0eb17af3f90bd40940',
+        'object': 'user',
+        'aspect': 'media',
+        'verify_token': 'myVerifyToken',
+        'callback_url': 'http://photobomb.herokuapp.com/map',
+      }
+    }, function (req, resp) {
+      console.log("req:\n" + req);
+      console.log("\nresp: \n" + resp);
+      console.log("\nresp.url: " + resp.url);
 
-     		var params = url.parse(resp.url, true).pathname;
-     		console.log("params: " + params);
-     		console.log('hub.mode: ' + params['hub.mode']);
-     		response.send(params['hub.challenge'] || 'No hub.challenge present');
-     	}
+      var params = url.parse(resp.url, true).pathname;
+      console.log("params: " + params);
+      console.log('hub.mode: ' + params['hub.mode']);
+      response.send(params['hub.challenge'] || 'No hub.challenge present');
+    }
     );*/
-  	/*Instagram.subscriptions.handshake(req, resp, function(data) {
-  		console.log("handshake() log");
-  		console.log(data);
-  	});*/
+    /*Instagram.subscriptions.handshake(req, resp, function(data) {
+      console.log("handshake() log");
+      console.log(data);
+    });*/
 
 });
 
 
 
 app.get('/subscribe', function(req, resp){
-  	console.log("\n== Calling /subscribe ==");
-  	Instagram.media.subscribe({ lat: 48.858844300000001, lng: 2.2943506, radius: 1000 });
+  console.log("\n== Calling /subscribe ==");
+  Instagram.media.subscribe({ lat: 48.858844300000001, lng: 2.2943506, radius: 1000 });
 
-    /*request.post(
-     	'https://api.instagram.com/v1/subscriptions/',
-     	{
-     		form: {
-     			'client_id': '9727dbbcbcdc47f6b70964201ec51b72',
-     			'client_secret': 'd3b5d25125624e0eb17af3f90bd40940',
-     			'object': 'user',
-     			'aspect': 'media',
-     			'verify_token': 'myVerifyToken',
-     			'callback_url': 'http://photobomb.herokuapp.com/map',
-     		}
-     	}, function (req, resp) {
-     		console.log("req:\n" + req);
-     		console.log("\nresp: \n" + resp);
-     		console.log("\nresp.url: " + resp.url);
+  /*request.post(
+    'https://api.instagram.com/v1/subscriptions/',
+    {
+      form: {
+        'client_id': '9727dbbcbcdc47f6b70964201ec51b72',
+        'client_secret': 'd3b5d25125624e0eb17af3f90bd40940',
+        'object': 'user',
+        'aspect': 'media',
+        'verify_token': 'myVerifyToken',
+        'callback_url': 'http://photobomb.herokuapp.com/map',
+      }
+    }, function (req, resp) {
+      console.log("req:\n" + req);
+      console.log("\nresp: \n" + resp);
+      console.log("\nresp.url: " + resp.url);
 
-     		var params = url.parse(resp.url, true).pathname;
-     		console.log("params: " + params);
-     		console.log('hub.mode: ' + params['hub.mode']);
-        response.send(params['hub.challenge'] || 'No hub.challenge present');
-     	}
+      var params = url.parse(resp.url, true).pathname;
+      console.log("params: " + params);
+      console.log('hub.mode: ' + params['hub.mode']);
+      response.send(params['hub.challenge'] || 'No hub.challenge present');
+    }
     );*/
 
 });
@@ -156,9 +157,11 @@ io.sockets.on('connection', function (socket) {
 io.sockets.on('connection', function (socket) {
   socket.on('get_flickr', function(data) {
     console.log('get_flickr');
+
     $.getJSON('http://anyorigin.com/get?url=http%3A//api.flickr.com/services/feeds/photos_public.gne%3Fformat%3Djson&callback=?', function(data){
       function jsonFlickrFeed(o) {
         items = o.items;
+        console.log(items);
         for (var item in items) {
           item = items[item];
           link = item.link;
@@ -167,11 +170,31 @@ io.sockets.on('connection', function (socket) {
 
           socket.emit('flickr', {
             id: id,
-            url: url
+            url: url,
+            link: link
           });
         }
       }
       eval(data.contents);
+/**
+    console.log($.getJSON);
+    $.getJSON('http://api.flickr.com/services/feeds/photos_public.gne?format=json', function(data) {
+      console.log(data);
+      photosList = $.parseJSON(data);
+
+      $.each(photosList, function(index, photo) {
+          photoId = photo.url;  // TODO Grab ID of Photo.
+          $.getJSON('http://api.flickr.com/services/rest/?method=flickr.photos.geo.getLocation&api_key=63966a7906fb93c2d1a674cb3e99d451&photo_id=' + 
+              photoId + '&format=json', function(photoData) {
+                socket.emit('flickr', {
+                  'url': data.url,
+                  'longitude': photoData.location.longitude,
+                  'latitude': photoData.location.latitude,
+                });
+              });
+
+      });
+>>>>>>> Stashed changes*/
     });
   });
 });
@@ -189,7 +212,7 @@ app.get('/callbacks/geo/:geoName', function(request, response){
 app.post('/callbacks/geo/:geoName', function(request, response){
     // The POST callback for Instagram to call every time there's an update
     // to one of our subscriptions.
-    
+
     // First, let's verify the payload's integrity by making sure it's
     // coming from a trusted source. We use the client secret as the key
     // to the HMAC.
@@ -197,12 +220,12 @@ app.post('/callbacks/geo/:geoName', function(request, response){
     hmac.update(request.rawBody);
     var providedSignature = request.headers['x-hub-signature'];
     var calculatedSignature = hmac.digest(encoding='hex');
-    
+
     // If they don't match up or we don't have any data coming over the
     // wire, then bail out early.
     if((providedSignature != calculatedSignature) || !request.body)
         response.send('FAIL');
-    
+
     // Go through and process each update. Note that every update doesn't
     // include the updated data - we use the data in the update to query
     // the Instagram API to get the data we want.

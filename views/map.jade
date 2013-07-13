@@ -7,7 +7,7 @@ block content
     socket.emit('get_flickr', {});
 
     socket.on('tweet', function (data) {
-      console.log(data);
+      // console.log(data);
       coords = data.coordinates.coordinates;
       latLng = new google.maps.LatLng(coords[1], coords[0]);
 
@@ -29,17 +29,55 @@ block content
       marker.setMap(map);
     });
 
-    socket.on('flickr', function(data) {
-      console.log(data);
-      // flickr code here
-    });
+    socket.on('flickr', function(data) { 
+      console.log("flickr id: " + data.id + "   flickr url: " + data.url + "   flickr link: " + data.link);
+      $.getJSON('http://anyorigin.com/get?url=http%3A//api.flickr.com/services/rest/%3Fmethod%3Dflickr.photos.geo.getLocation%26api_key%3D63966a7906fb93c2d1a674cb3e99d451%26format%3Djson%26photo_id%3D' + data.id.toString() + '&callback=?', function(photoData) {
+        var coords;
 
+        console.log("photoData: " + photoData.contents);
+        function jsonFlickrApi(data) {
+          if (data.stat == "fail") {
+            console.log("No location data!");
+            return;
+          }
+
+          latitude = data.photo.location.latitude;
+          longitude = data.photo.location.longitude;  
+
+          coords = new google.maps.LatLng(latitude, longitude);
+          console.log(coords);
+          console.log("(Lat, Long): " + latitude + ", " + longitude);
+        }
+        eval(photoData.contents);
+
+        if (!coords) {
+          return;
+        }
+
+        var circle = {
+          path: google.maps.SymbolPath.CIRCLE,
+          fillColor: "blue",
+          fillOpacity: 1,
+          scale: 1,
+          strokeColor: "blue",
+          strokeWeight: 8
+        };
+
+        marker = new google.maps.Marker({
+          position: coords,
+          icon: circle,
+          title: "Photo from: " + coords,
+          animation: google.maps.Animation.DROP, 
+        });
+        marker.setMap(map);
+      }); 
+    });
   script.
     var map;
     function initialize() {
       var mapOptions = {
-        zoom: 5,
-        center: new google.maps.LatLng(38.640143, -97.28685),
+        zoom: 3,
+        center: new google.maps.LatLng(30.640143, 42.28685),
         mapTypeId: google.maps.MapTypeId.ROADMAP
       }
       map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
