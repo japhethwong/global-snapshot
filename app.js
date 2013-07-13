@@ -11,6 +11,7 @@ var express = require('express')
   , path = require('path')
   , request = require('request')
   , url = require('url')
+  , helpers = require('./helpers')
   , Instagram = require('instagram-node-lib');
 
 var $ = require('jquery').create();
