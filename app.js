@@ -12,6 +12,7 @@ var express = require('express')
   , request = require('request')
   , url = require('url')
   , helpers = require('./helpers')
+  , crypto = require('crypto')
   , Instagram = require('instagram-node-lib');
 
 var $ = require('jquery').create();

@@ -17,6 +17,7 @@
     "url": "*",
     "instagram-node-lib": "*",
     "jquery": "*",
-    "redis": "*"
+    "redis": "*",
+    "crypto": "*"
   }
 }
