@@ -34,14 +34,15 @@ block content
 
     function createMarker(marker) {
       var infowindow = new google.maps.InfoWindow({
-        content: '"' + marker.data_text + '"' + '<br>    --' + marker.data_title
+        content: '<span class="twitter_tweet">"' + marker.data_text + '"</span>' + '<br><span class="twitter_title"><i class="icon-twitter"></i>&nbsp;' + marker.data_title + '</span>',
+        maxWidth: 350
       });
 
       google.maps.event.addListener(marker, 'mouseover', function() {
         infowindow.open(marker.get('map'), marker);
       });
       google.maps.event.addListener(marker, 'mouseout', function() {
-      //infowindow.close(marker.get('map'), marker);
+        infowindow.close(marker.get('map'), marker);
       });
       google.maps.event.addListener(marker, 'click', function() {
         infowindow.open(marker.get('map'), marker);
@@ -80,15 +81,22 @@ block content
     });
 
     function createPhotoMarker(marker) {
-      var infowindow = new google.maps.InfoWindow({
-        content: '<img src="' + marker.img + '"</img>'
-      });
+      if (marker.title) {
+        var infowindow = new google.maps.InfoWindow({
+          content: '<img src="' + marker.img + '"/><br><span class="photo_details"><i class="icon-flickr"></i>&nbsp;' + marker.title + '</span>'
+        });  
+      } else {
+        var infowindow = new google.maps.InfoWindow({
+          content: '<img src="' + marker.img + '"/>'
+        });
+      }
+      
 
       google.maps.event.addListener(marker, 'mouseover', function() {
         infowindow.open(marker.get('map'), marker);
       });
       google.maps.event.addListener(marker, 'mouseout', function() {
-      //infowindow.close(marker.get('map'), marker);
+      infowindow.close(marker.get('map'), marker);
       });
       google.maps.event.addListener(marker, 'click', function() {
         infowindow.open(marker.get('map'), marker);
@@ -98,7 +106,7 @@ block content
 
     socket.on('flickr', function(data) {
       $.getJSON('http://anyorigin.com/get?url=http%3A//api.flickr.com/services/rest/%3Fmethod%3Dflickr.photos.geo.getLocation%26api_key%3D63966a7906fb93c2d1a674cb3e99d451%26format%3Djson%26photo_id%3D' + data.id.toString() + '&callback=?', function(photoData) {
-        var coords;
+        var coords, location;
 
         function jsonFlickrApi(data) {
           if (data.stat == "fail") {
@@ -128,7 +136,7 @@ block content
         marker = new google.maps.Marker({
           position: coords,
           icon: circle,
-          title: "Photo from: " + coords,
+          title: data.username,//location,
           img: data.url,
           animation: google.maps.Animation.DROP, 
         });
