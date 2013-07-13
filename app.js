@@ -97,9 +97,13 @@ app.get('/auth', function(req, resp) {
 
 
 
-app.get('/subscribe', function(req, resp){
-  console.log("\n== Calling /subscribe ==");
-  Instagram.media.subscribe({ lat: 48.858844300000001, lng: 2.2943506, radius: 1000 });
+app.get('/auth', function(req, resp){
+  console.log("\n== Calling /auth ==");
+  Instagram.media.subscribe({ lat: 48.858844300000001, lng: 2.2943506, radius: 1000 }, function(req, resp) {
+    var params = url.parse(req.url, true).query;
+    resp.send(params['hub.challenge'] || 'No hub.challenge present');  
+  });
+
 
   /*request.post(
     'https://api.instagram.com/v1/subscriptions/',
