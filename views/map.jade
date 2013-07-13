@@ -96,22 +96,16 @@ block content
       contain.style.background = 'white';
       var pic = document.createElement('img');
       pic.src = url;
-      // pic.width = 100%;
       contain.appendChild(pic);
       var feed = document.getElementById('feed');
       feed.insertBefore(contain, feed.firstChild);
       if (feed.childNodes.length > 10) {
         feed.removeChild(feed.lastChild);
       }
-    }  
-    
+    }
+
   #header
     h1#name Photo Bomb
   #map
     #map-canvas(style='width: 100%; height: 100%')
   #feed
-    // Anything here?
-
-    
-  
-
