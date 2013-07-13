@@ -147,6 +147,7 @@ block content
       });
     });
   script.
+    var small = true;
     var tweet = function(url) {
       //var contain = document.createElement('div');
       //contain.style.background = 'white';
@@ -156,11 +157,12 @@ block content
       var feed = document.getElementById('feed');
       //feed.insertBefore(contain, feed.firstChild);
       feed.insertBefore(pic, feed.firstChild);
-      if (feed.childNodes.length > 10) {
-        feed.removeChild(feed.lastChild);
+      if (small) {
+        realignImages();
+      } else {
+        alignImages();
       }
     }
-
   #header
     h1#name 
       i.icon-globe
@@ -174,5 +176,46 @@ block content
       span &nbsp;Flickr Photos:
       span#photo_counter 0
   #feed
+    button.clientsOpen hello
   #map
     #map-canvas(style='width: 100%; height: 100%')
+  script.
+    var currHeight = 0;
+    var currWidth = 0;
+    var windowHeight = $("#feed").height;
+
+    function alignImages() {
+      console.log('align');
+      var feed = $("#feed");
+      feed.children('img').each(function() {
+        this.height = 200;
+        $(this).css('width', 'auto');
+      });
+    }
+
+    function realignImages() {
+      console.log('realign');
+      var feed = $("#feed");
+      feed.children('img').each(function() {
+        this.width = 200;
+        $(this).css('height', 'auto');
+      });
+    }
+
+    $('.clientsOpen').click(function () {
+      console.log('clicked');
+
+      if (small) {
+        $("#feed").animate({width: "100%"}, 1000, function() {
+          small = false;
+          alignImages();
+        });
+      } else {
+        console.log('hi');
+        $("#feed").animate({width: "200px"}, 1000, function() {
+          small = true;
+          realignImages();
+        });
+      }
+    }); // end click
+
