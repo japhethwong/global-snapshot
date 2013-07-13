@@ -8,9 +8,13 @@ var express = require('express')
   , user = require('./routes/user')
   , map = require('./routes/map')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , request = require('request')
+  , url = require('url')
+  , Instagram = require('instagram-node-lib');
 
 var app = express();
+<<<<<<< HEAD
 var server = app.listen(3000);
 var io = require('socket.io').listen(server);
 
@@ -22,6 +26,11 @@ var twit = new twitter({
   access_token_key: '83308529-t3GLeKnGJT2MFi9YPQDutkcli7m4NOszHKmeFgQWs',
   access_token_secret: 'hptgcpkIbpTzqJRUeoEYF89HyKRXYPsfqXvqWogvLg'
 });
+=======
+Instagram.set('client_id', '9727dbbcbcdc47f6b70964201ec51b72');	
+Instagram.set('client_secret', 'd3b5d25125624e0eb17af3f90bd40940');
+Instagram.set('callback_url', 'http://photobomb.herokuapp.com/auth');
+>>>>>>> b9661784b25252ee378a6dd6b0acc5581a1b0b8a
 
 // all environments
 app.set('views', __dirname + '/views');
@@ -42,6 +51,80 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/map', map.show);
 app.get('/users', user.list);
+
+app.get('/auth', function(req, resp) {
+  	console.log("\n== Calling /auth ==");
+  	
+  	if (req.param("hub.challenge") != null)	 {
+  		console.log("hub.challenge not null");
+  		console.log("req.param['hub.challenge']: " + req.param("hub.challenge"));
+  		console.log("resp.url: " + resp.url);
+  		resp.send(req.param("hub.challenge"));
+  	} else {
+  		console.log("ERROR did not find hub.challenge in request: %s", util.inspect(request));
+  	}
+
+
+  	/*resp.post(
+     	'https://api.instagram.com/v1/subscriptions/',
+     	{
+     		form: {
+     			'client_id': '9727dbbcbcdc47f6b70964201ec51b72',
+     			'client_secret': 'd3b5d25125624e0eb17af3f90bd40940',
+     			'object': 'user',
+     			'aspect': 'media',
+     			'verify_token': 'myVerifyToken',
+     			'callback_url': 'http://photobomb.herokuapp.com/map',
+     		}
+     	}, function (req, resp) {
+     		console.log("req:\n" + req);
+     		console.log("\nresp: \n" + resp);
+     		console.log("\nresp.url: " + resp.url);
+
+     		var params = url.parse(resp.url, true).pathname;
+     		console.log("params: " + params);
+     		console.log('hub.mode: ' + params['hub.mode']);
+     		response.send(params['hub.challenge'] || 'No hub.challenge present');
+     	}
+    );*/
+  	/*Instagram.subscriptions.handshake(req, resp, function(data) {
+  		console.log("handshake() log");
+  		console.log(data);
+  	});*/
+
+});
+
+
+
+app.get('/subscribe', function(req, resp){
+  	console.log("\n== Calling /subscribe ==");
+  	Instagram.media.subscribe({ lat: 48.858844300000001, lng: 2.2943506, radius: 1000 });
+
+    /*request.post(
+     	'https://api.instagram.com/v1/subscriptions/',
+     	{
+     		form: {
+     			'client_id': '9727dbbcbcdc47f6b70964201ec51b72',
+     			'client_secret': 'd3b5d25125624e0eb17af3f90bd40940',
+     			'object': 'user',
+     			'aspect': 'media',
+     			'verify_token': 'myVerifyToken',
+     			'callback_url': 'http://photobomb.herokuapp.com/map',
+     		}
+     	}, function (req, resp) {
+     		console.log("req:\n" + req);
+     		console.log("\nresp: \n" + resp);
+     		console.log("\nresp.url: " + resp.url);
+
+     		var params = url.parse(resp.url, true).pathname;
+     		console.log("params: " + params);
+     		console.log('hub.mode: ' + params['hub.mode']);
+     		response.send(params['hub.challenge'] || 'No hub.challenge present');
+     	}
+    );*/
+
+});
+
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port 3000');

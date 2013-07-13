@@ -12,6 +12,9 @@
     "nodemon": "*",
     "googlemaps": "*",
     "ntwitter": "*",
-    "socket.io": "*"
+    "socket.io": "*",
+    "request": "*",
+    "url": "*",
+    "instagram-node-lib": "*"
   }
 }
