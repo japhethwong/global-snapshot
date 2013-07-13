@@ -97,8 +97,8 @@ app.get('/users', user.list);
 
 
 
-app.get('/auth', function(req, resp){
-  console.log("\n== Calling /auth ==");
+app.get('/subscribe', function(req, resp){
+  console.log("\n== Calling /subscribe ==");
   Instagram.media.subscribe({ lat: 48.858844300000001, lng: 2.2943506, radius: 1000 }, function(req, resp) {
     var params = url.parse(req.url, true).query;
     console.log("req.url: " + req.url);
