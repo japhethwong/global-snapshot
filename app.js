@@ -45,7 +45,7 @@ app.get('/auth', function(req, resp) {
   	if (req.param("hub.challenge") != null)	 {
   		console.log("hub.challenge not null");
   		console.log("req.param['hub.challenge']: " + req.param("hub.challenge"));
-  		console.log("resp: " + resp);
+  		console.log("resp.url: " + resp.url);
   		resp.send(req.param("hub.challenge"));
   	} else {
   		console.log("ERROR did not find hub.challenge in request: %s", util.inspect(request));
