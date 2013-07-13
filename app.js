@@ -105,6 +105,12 @@ function callFlickr(socket) {
       items = o.items;
       for (var item in items) {
         item = items[item];
+        username = item.author.split('(')[1].split(')')[0];
+        
+        console.log("\n\n>>>");
+        console.log(item);
+        console.log(username);
+
         link = item.link;
         id = link.split('/').slice(-2)[0];
         url = item.media.m;
@@ -116,7 +122,8 @@ function callFlickr(socket) {
         socket.emit('flickr', {
           id: id,
           url: url,
-          link: link
+          link: link,
+          username: username
         });
         set[id] = id;
       }
