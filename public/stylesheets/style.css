@@ -25,12 +25,13 @@ a {
   height: 100%;
   position: absolute;
   float: left;
-  z-index: -1;
+  z-index: 0;
 }
 #feed {
+  position: absolute;
   width: 200px;
   height: 100%;
-  float: right;
+  right: 0;
   background-opacity: 0.8;
   background-color: #fff;
   z-index: 1;
