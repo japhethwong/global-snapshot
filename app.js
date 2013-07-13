@@ -42,7 +42,9 @@ app.get('/users', user.list);
 
 
 app.get('/auth', function(req, resp) {
-  	Instagram.subscriptions.handshake(req, resp); 
+  	Instagram.subscriptions.handshake(req, resp, function(data) {
+  		console.log(data);
+  	}); 
 });
 
 
