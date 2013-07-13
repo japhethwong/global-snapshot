@@ -30,14 +30,11 @@ block content
     });
 
     socket.on('flickr', function(data) { 
-      console.log("flickr id: " + data.id + "   flickr url: " + data.url + "   flickr link: " + data.link);
       $.getJSON('http://anyorigin.com/get?url=http%3A//api.flickr.com/services/rest/%3Fmethod%3Dflickr.photos.geo.getLocation%26api_key%3D63966a7906fb93c2d1a674cb3e99d451%26format%3Djson%26photo_id%3D' + data.id.toString() + '&callback=?', function(photoData) {
         var coords;
 
-        console.log("photoData: " + photoData.contents);
         function jsonFlickrApi(data) {
           if (data.stat == "fail") {
-            console.log("No location data!");
             return;
           }
 
@@ -45,8 +42,6 @@ block content
           longitude = data.photo.location.longitude;  
 
           coords = new google.maps.LatLng(latitude, longitude);
-          console.log(coords);
-          console.log("(Lat, Long): " + latitude + ", " + longitude);
         }
         eval(photoData.contents);
 
@@ -70,14 +65,15 @@ block content
           animation: google.maps.Animation.DROP, 
         });
         marker.setMap(map);
-      }); 
+      tweet(data.url);
+      });
     });
   script.
     var map;
     function initialize() {
       var mapOptions = {
         zoom: 3,
-        center: new google.maps.LatLng(30.640143, 42.28685),
+        center: new google.maps.LatLng(30, 42),
         mapTypeId: google.maps.MapTypeId.ROADMAP
       }
       map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
