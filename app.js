@@ -14,7 +14,6 @@ var express = require('express')
   , Instagram = require('instagram-node-lib');
 
 var app = express();
-<<<<<<< HEAD
 var server = app.listen(3000);
 var io = require('socket.io').listen(server);
 
@@ -26,11 +25,10 @@ var twit = new twitter({
   access_token_key: '83308529-t3GLeKnGJT2MFi9YPQDutkcli7m4NOszHKmeFgQWs',
   access_token_secret: 'hptgcpkIbpTzqJRUeoEYF89HyKRXYPsfqXvqWogvLg'
 });
-=======
+
 Instagram.set('client_id', '9727dbbcbcdc47f6b70964201ec51b72');	
 Instagram.set('client_secret', 'd3b5d25125624e0eb17af3f90bd40940');
 Instagram.set('callback_url', 'http://photobomb.herokuapp.com/auth');
->>>>>>> b9661784b25252ee378a6dd6b0acc5581a1b0b8a
 
 // all environments
 app.set('views', __dirname + '/views');
@@ -119,7 +117,7 @@ app.get('/subscribe', function(req, resp){
      		var params = url.parse(resp.url, true).pathname;
      		console.log("params: " + params);
      		console.log('hub.mode: ' + params['hub.mode']);
-     		response.send(params['hub.challenge'] || 'No hub.challenge present');
+        response.send(params['hub.challenge'] || 'No hub.challenge present');
      	}
     );*/
 
