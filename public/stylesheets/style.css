@@ -4,9 +4,30 @@ html {
 body {
   height: 100%;
   width: 100%;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: #fff;
+  font: 14px "century gothic", tahoma, "Lucida Grande", Helvetica, Arial, sans-serif;
   margin: 0;
 }
 a {
   color: #00b7ff;
+}
+#header {
+  height: 10%;
+  width: 100%;
+  background-color: #fff;
+}
+#map {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  float: left;
+  background-color: #ffa500;
+}
+#feed {
+  width: 20%;
+  height: 100%;
+  float: right;
+  opacity: 0.8;
+  background-color: #fff;
+  z-index: 1;
 }
