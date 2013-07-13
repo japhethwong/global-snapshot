@@ -39,8 +39,6 @@ app.get('/', routes.index);
 app.get('/map', map.show);
 app.get('/users', user.list);
 
-
-
 app.get('/auth', function(req, resp) {
   	console.log("\n== Calling /auth ==");
   	/*resp.post(
@@ -66,6 +64,7 @@ app.get('/auth', function(req, resp) {
      	}
     );*/
   	Instagram.subscriptions.handshake(req, resp, function(data) {
+  		console.log("handshake() log");
   		console.log(data);
   	});
 
