@@ -156,10 +156,22 @@ io.sockets.on('connection', function (socket) {
 io.sockets.on('connection', function (socket) {
   socket.on('get_flickr', function(data) {
     console.log('get_flickr');
-    console.log($.getJSON);
-    $.getJSON('http://api.flickr.com/services/feeds/photos_public.gne?format=json', function(data) {
-      console.log(data);
-    });
+    $.getJSON('http://anyorigin.com/get?url=http%3A//api.flickr.com/services/feeds/photos_public.gne%3Fformat%3Djson&callback=?', function(data){
+      function jsonFlickrFeed(o) {
+        items = o.items;
+        for (var item in items) {
+          item = items[item];
+          link = item.link;
+          id = link.split('/').slice(-2)[0];
+          url = item.media.m;
 
+          socket.emit('flickr', {
+            id: id,
+            url: url
+          });
+        }
+      }
+      eval(data.contents);
+    });
   });
 });
