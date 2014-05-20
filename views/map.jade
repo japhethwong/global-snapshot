@@ -99,7 +99,7 @@ block content
     }
 
     socket.on('flickr', function(data) {
-      $.getJSON('http://anyorigin.com/get?url=https%3A//api.flickr.com/services/rest/%3Fmethod%3Dflickr.photos.geo.getLocation%26api_key%3D63966a7906fb93c2d1a674cb3e99d451%26format%3Djson%26photo_id%3D' + data.id.toString() + '&callback=?', function(photoData) {
+      $.getJSON('http://anyorigin.com/get?url=https://api.flickr.com/services/rest/%3Fmethod%3Dflickr.photos.geo.getLocation%26api_key%3D63966a7906fb93c2d1a674cb3e99d451%26format%3Djson%26photo_id%3D' + data.id.toString() + '&callback=?', function(photoData) {
         var coords, location;
 
         function jsonFlickrApi(data) {

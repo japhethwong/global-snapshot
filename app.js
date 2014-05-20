@@ -102,7 +102,7 @@ var set = {};
 
 function callFlickr(socket) {
   console.log('call flickr');
-  $.getJSON('http://anyorigin.com/get?url=https%3A//api.flickr.com/services/feeds/photos_public.gne%3Fformat%3Djson&callback=?', function(data){
+  $.getJSON('http://anyorigin.com/get?url=https://api.flickr.com/services/feeds/photos_public.gne%3Fformat%3Djson&callback=?', function(data){
     if (set.length > 0) {
       set = {};
     }
